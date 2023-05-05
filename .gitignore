@@ -1,3 +1,10 @@
+# pictures  and PDF files
+*.png
+*.pdf
+
+# Text file
+*.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
