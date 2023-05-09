@@ -5,10 +5,14 @@
 import younglaplace as yl
 import numpy as np
 import matplotlib.pyplot as plt
-
 # from   matplotlib.patches import Circle
 # import scipy.special as spe
 # import sys
+
+docstr = """
+Given a confined volume and a pinned contact line, compute the force v.s. displacement relationship.
+pinned region.
+"""
 
 # NEED INPUT 
 interface = 50.9  # first the location of interface, 0.76 is the effective wall location

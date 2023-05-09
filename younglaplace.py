@@ -18,29 +18,29 @@ Reference:
 
 class YL(object):
     """
-    R     : radius of nanoparticle
-    L     : radius of cylinder
-    D     : distance between of bottom of nanoparticle and coordinate
-    d     : scaled D, D/R
-    l     : scaled radius of cylinder, L/R
+    R      : radius of nanoparticle
+    L      : radius of cylinder
+    D      : distance between of bottom of nanoparticle and coordinate
+    d      : scaled D, D/R
+    l      : scaled radius of cylinder, L/R
 
-    theta1: contact angle at the sphere
-    psi   : filling angle
-    t     : angle of the normal to meniscus with the vertical axis
-    t1    : angle of the normal to meniscus at sphere with the vertical axis
+    theta1 : contact angle at the sphere
+    psi    : filling angle
+    t      : angle of the normal to meniscus with the vertical axis
+    t1     : angle of the normal to meniscus at sphere with the vertical axis
 
-    H     : dimensionless mean curvature
-    c     : parameter in the formula
+    H      : dimensionless mean curvature
+    c      : parameter in the formula
 
-    k2    : k square, used in elliptic integral!
-    x     : scaled horizontal coordination
-    y     : scaled vertical coordination
+    k2     : k square, used in elliptic integral!
+    x      : scaled horizontal coordination
+    y      : scaled vertical coordination
 
-    y1    : scaled vertical boundary condition at sphere
-    force : scaled force on nanoparticle / (2*pi*gamma*R)
-    h     : vertical distance between center of the nanoparicle 
+    y1     : scaled vertical boundary condition at sphere
+    force  : scaled force on nanoparticle / (2*pi*gamma*R)
+    h      : vertical distance between center of the nanoparicle 
             and boundary condition at the wall!
-    Dy    : vertical scaled interface distortion length
+    Dy     : vertical scaled interface distortion length
     """
 
     def __init__(self, R = 10.35, L = 50.0, D = 50.0, theta1 = 30.0, psi = 130.0):
