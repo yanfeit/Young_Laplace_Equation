@@ -19,8 +19,9 @@ Given a confined volume and a contact angle, compute the force v.s. displacement
 This is what I called slinding region.
 """
 
-# NEED INPUT 
-interface = 50.9  # the location of interface, 0.76 is the effective wall location
+# INPUT 
+# the location of interface, 0.76 is the effective wall location
+interface = 50.9  
 L         = 49.7
 R         = 10.35
 D         = 50.0
@@ -41,13 +42,12 @@ for psi in psis:
     Vs.append(model.V)
 
 Vs = np.array(Vs)
-indexmin = np.where(Vs == Vs.min())
-indexmax = np.where(Vs == Vs.max())
+indexmin = np.where(Vs == Vs.min())[0][0]
+indexmax = np.where(Vs == Vs.max())[0][0]
 
 # Notice that the line of filling angle v.s volume is not 
 # monotonic, here needs some stable analysis. We think that
 # large filling anlge is more stable than small filing angle. Why???
-
 # And we only consider filling in this region
 # psi in [psi[indexmin], psi[indexmax]]
 

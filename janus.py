@@ -26,7 +26,6 @@ class Janus(object):
     hydrophobic: contact angle of hydrophobic part of the sphere
     hydrophilic: contact angle of hydrophilic part of the sphere
     """
-
     def __init__(self, hydrophobic = 150.0, hydrophilic = 30.0, height = 50.0, L = 50.0, R = 10.0, D = 50.0):
 
         self.hydrophobic = hydrophobic
@@ -41,7 +40,9 @@ class Janus(object):
 
         # reduced volume of liquid
         self.V           = np.pi*self.l*self.l*height/R
-        # definition of the interface ???
+        # definition of the interface
+        # In the equilibrium state, half of the particle is merged under the water
+        # we can computed the location of the interface.
         self.interface   = 0.5 *4.0/3.0*np.pi/self.l/self.l/np.pi*self.R + self.height
         
         # Pulling up from a finite filling angle with a constant hydrophobic contact angle
@@ -51,7 +52,6 @@ class Janus(object):
         self.Vs   = []
 
         for psi in self.psis:
-
             model = yl.YL(R = self.R, L = self.L, D = self.D, theta1 = self.hydrophobic, psi = psi)
             self.Vs.append(model.V)
 
@@ -61,7 +61,7 @@ class Janus(object):
         #plt.show()
         
         indexmin = -1
-        indexmax = np.where(self.Vs == self.Vs.max()) 
+        indexmax = np.where(self.Vs == self.Vs.max())[0][0]
 
         psi_min = self.psis[indexmin]
         psi_max = self.psis[indexmax]
@@ -101,8 +101,8 @@ class Janus(object):
         #plt.plot(theta1s, Vs)
         #plt.show()
         
-        indexmin = np.where(Vs == Vs.max()) # should be 0
-        indexmax = np.where(Vs == Vs.min()) # should be -1, (99). 
+        indexmin = np.where(Vs == Vs.max())[0][0] # should be 0
+        indexmax = np.where(Vs == Vs.min())[0][0] # should be -1, (99). 
 
         theta1_max = theta1s[indexmax]
         theta1_min = theta1s[indexmin]
@@ -124,7 +124,6 @@ class Janus(object):
 
         # Keep pulling the particles to sliding contact angle condition at the
         # hydrophilic part of the Janus particle till the rupture of the meniscus
-        # 
 
         self.psis = np.linspace(90.0, 1.0, 100)
         self.Vs   = []
@@ -140,7 +139,7 @@ class Janus(object):
         #plt.show()
         
         indexmin = 0
-        indexmax = np.where(self.Vs == self.Vs.min()) 
+        indexmax = np.where(self.Vs == self.Vs.min())[0][0]
 
         psi_min = self.psis[indexmax]
         psi_max = self.psis[indexmin]
@@ -166,16 +165,9 @@ if __name__ == "__main__":
 
     model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
 
-    displacement = []
-    force        = []
-    L = []
-    R = []
-    D = []
-    theta1 = []
-    psi = []
+    displacement, force, L, R, D, theta1, psi = [], [], [], [], [], [], []
         
     for i in range(len(model.models)):
-
         displacement.append((model.models[i].D + model.R  - model.interface)/model.R)
         force.append(model.models[i].force)
         L.append(model.models[i].L)
