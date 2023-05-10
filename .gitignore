@@ -1,6 +1,7 @@
 # pictures  and PDF files
 *.png
 *.pdf
+*.mp4
 
 # Text file
 *.txt

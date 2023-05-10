@@ -19,6 +19,17 @@ This is a physical decription of the process. In the beginning of sliding region
 merged under the liquid with menisci formed. The filling angle decreases with the undergoing pulling process. 
 It then pins at the equator of the sphere with a right filling angle. At some point, the process 
 is back to the sliding region with a rising menisci.
+
+input: 
+hydrophobic, hydrophilic : contact angle of the two part janus particle
+height :                   liquid height without considering the particle
+L :                        container radius      
+R :                        radius of the janus particle
+D :                        distance between the bottom of the particle and bottom of the containder.
+
+output:
+info.txt :   information for the input of younglaplace equation script
+sample.txt : force curve
 """
 
 class Janus(object):
