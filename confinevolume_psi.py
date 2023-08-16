@@ -27,7 +27,7 @@ R         = 10.35
 D         = 50.0
 d         = D/R
 l         = L/R
-theta1    = 48.0
+theta1    =  83.655540
 # reduced volume of liquid
 V         = np.pi*l*l*interface/R
 # End input
