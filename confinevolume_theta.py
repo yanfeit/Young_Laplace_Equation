@@ -16,7 +16,7 @@ pinned region.
 
 # NEED INPUT 
 interface = 50.9  # first the location of interface, 0.76 is the effective wall location
-L         = 49.7
+L         = 49.3
 R         = 10.35
 D         = 50.0
 d         = D/R
@@ -46,8 +46,8 @@ indexmax = np.where(Vs == Vs.max())
 # And we only consider filling in this region
 # psi in [psi[indexmin], psi[indexmax]]
 
-theta1_min = theta1s[indexmin][0][0]
-theta1_max = theta1s[indexmax][0][0]
+theta1_min = theta1s[indexmin]
+theta1_max = theta1s[indexmax]
 
 theat1s = np.linspace(theta1_min, theta1_max, 100)
 Ds = []

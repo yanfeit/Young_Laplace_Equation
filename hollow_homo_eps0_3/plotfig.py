@@ -6,10 +6,10 @@ import numpy as np
 # Plot the simulation results
 data = np.loadtxt("homo_eps0.3.txt", skiprows = 1)
 
-exp_x = (data[:, 0] - 50.6)/10.45
+exp_x = (data[:, 0] - 50.2)/10.7
 gamma = 1.018
-exp_F = -data[:, 1]/2/3.14/gamma/10.45
-exp_err = data[:, 2]/2/3.14/gamma/10.45
+exp_F = -data[:, 1]/2/3.14/gamma/10.7
+exp_err = data[:, 2]/2/3.14/gamma/10.7
 
 plt.errorbar(exp_x, exp_F, exp_err, fmt = "o--", capsize = 2.0, fillstyle = 'none', color = 'r')
 
