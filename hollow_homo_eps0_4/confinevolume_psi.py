@@ -27,7 +27,7 @@ R         = 10.7
 D         = 49.3
 d         = D/R
 l         = L/R
-theta1    =  83.655540
+theta1    = 76.4656536538
 # reduced volume of liquid
 V         = np.pi*l*l*interface/R
 # End input
@@ -64,7 +64,7 @@ for psi in psis:
 
 Ds = np.array(Ds)
 forces = []
-ofile = open("YL_Ans100.txt", 'w')
+ofile = open("theoretical_curve.txt", 'w')
 ofile.write("relative distance  force\n")
 for i in range(len(psis)):
 
