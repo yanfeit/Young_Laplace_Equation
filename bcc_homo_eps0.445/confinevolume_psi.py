@@ -23,11 +23,11 @@ This is what I called slinding region.
 # the location of interface, 0.76 is the effective wall location
 interface = 50.2  
 L         = 49.3
-R         = 10.7
+R         = 10.55
 D         = 49.3
 d         = D/R
 l         = L/R
-theta1    = 0.0
+theta1    = 83.655540
 # reduced volume of liquid
 V         = np.pi*l*l*interface/R
 # End input
