@@ -1,6 +1,12 @@
-#!/bin/python
-# Yanfei Tang 
-# Date: 2018, 2023 @ Virginia Tech, Zhejiang Lab
+#    -------------------------------------------------------------------------- 
+#    Zhejiang Lab, Zhejiang, China
+#    Yanfei Tang, tangyf@zhejianglab.com
+
+#    Copyright (2023) Zhejiang Lab.  Under the terms of Contract
+#    2021PB0AC02 with Zhejiang Lab, the Zhejiang Government retains
+#    certain rights in this software.  This software is distributed under
+#    the GNU General Public License.
+#    -------------------------------------------------------------------------- 
 
 import younglaplace as yl
 import numpy as np
@@ -28,8 +34,7 @@ R :                        radius of the janus particle
 D :                        distance between the bottom of the particle and bottom of the containder.
 
 output:
-info.txt :   information for the input of younglaplace equation script
-sample.txt : force curve
+HDF5
 """
 
 class Janus(object):

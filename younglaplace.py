@@ -1,4 +1,3 @@
-#!/bin/python
 #    -------------------------------------------------------------------------- 
 #    Zhejiang Lab, Zhejiang, China
 #    Yanfei Tang, tangyf@zhejianglab.com
@@ -7,7 +6,6 @@
 #    2021PB0AC02 with Zhejiang Lab, the Zhejiang Government retains
 #    certain rights in this software.  This software is distributed under
 #    the GNU General Public License.
-
 #    -------------------------------------------------------------------------- 
 
 import numpy as np
@@ -168,7 +166,3 @@ if __name__ == "__main__":
     model.draw()
     print(model.meniscus())
         
-        
-        
-
-
