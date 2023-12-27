@@ -18,35 +18,39 @@ docstr = """
 Solve Young-Laplace Equation of nanoparticle in a confining cylinder wall.
 
 Reference: 
-1. Orr, Scriven and Rivas; Pendular rings between solids: meniscus properties and capillary force, JFM 67 723 (1975)
+1. Orr, Scriven and Rivas; Pendular rings between solids: meniscus properties \\
+    and capillary force, JFM 67 723 (1975)
 2. Rubinstein and Fel; Theory of Pendular Rings Revisited, ArXiv 1207.7096v1 (2012)
+3. Yanfei Tang and Shengfeng Cheng; Capillary forces on a small particle \\ 
+    at a liquid-vapor interface: Theory and simulation, PRE 98, 032802 (2018)
 """
 
 class YL(object):
     """
-    R      : radius of nanoparticle
-    L      : radius of cylinder
-    D      : distance between of bottom of nanoparticle and coordinate
-    d      : scaled D, D/R
-    l      : scaled radius of cylinder, L/R
+    R      : (scalar) radius of nanoparticle
+    L      : (scalar) radius of cylinder
+    D      : (scalar) distance between of bottom of nanoparticle and coordinate
+    d      : (scalar) scaled D, D/R
+    l      : (scalar) scaled radius of cylinder, L/R
 
-    theta1 : contact angle at the sphere
-    psi    : filling angle
-    t      : angle of the normal to meniscus with the vertical axis
-    t1     : angle of the normal to meniscus at sphere with the vertical axis
+    theta1 : (scalar) contact angle at the sphere
+    psi    : (scalar) filling angle
+    t      : (array) angle of the normal to meniscus with the vertical axis
+    t1     : (scalar) angle of the normal to meniscus at sphere with the vertical axis
 
-    H      : dimensionless mean curvature
-    c      : parameter in the formula
+    H      : (scalar) dimensionless mean curvature
+    c      : (scalar) parameter in the formula
 
-    k2     : k square, used in elliptic integral!
-    x      : scaled horizontal coordination
-    y      : scaled vertical coordination
+    k2     : (scalar) k square, used in elliptic integral!
+    x      : (array) scaled horizontal coordination
+    y      : (array) scaled vertical coordination
 
-    y1     : scaled vertical boundary condition at sphere
-    force  : scaled force on nanoparticle / (2*pi*gamma*R)
-    h      : vertical distance between center of the nanoparicle 
-            and boundary condition at the wall!
-    Dy     : vertical scaled interface distortion length
+    y1     : (scalar) scaled vertical boundary condition at sphere
+    force  : (scalar) scaled force on nanoparticle / (2*pi*gamma*R)
+    h      : (scalar) vertical distance between center of the nanoparicle 
+            and boundary condition at the wall! / inconsistent with the PRE paper.
+    Dy     : (scalar) vertical scaled interface distortion length, 
+            delta h in my PRE 98, 032802 paper.
     """
 
     def __init__(self, R = 10.35, L = 50.0, D = 50.0, theta1 = 30.0, psi = 130.0):
@@ -87,7 +91,8 @@ class YL(object):
         self.y1    = 1 + self.d - np.cos(self.psi)
         self.part1 = 1.0/2.0/self.H * (np.cos(self.t1) - np.cos(self.t))
         self.part2 = self.s * np.sqrt(self.c)/2.0/self.H * \
-                     (spe.ellipeinc(self.t,self.k2) - spe.ellipeinc(self.t1,self.k2) - spe.ellipkinc(self.t,self.k2) + spe.ellipkinc(self.t1, self.k2))
+                     (spe.ellipeinc(self.t,self.k2) - spe.ellipeinc(self.t1,self.k2) - \
+                     spe.ellipkinc(self.t,self.k2) + spe.ellipkinc(self.t1, self.k2))
 
         self.y     = self.y1 + self.part1 + self.part2
         self.force = np.sin(self.psi) * np.sin(self.theta1 + self.psi) - self.H * np.sin(self.psi) * np.sin(self.psi)
@@ -112,13 +117,21 @@ class YL(object):
         cos3psi     = np.cos(self.psi) * np.cos(self.psi) * np.cos(self.psi) 
         self.V      = self.Vc + np.pi * self.l * self.l * self.y2 - 1/3.0 * np.pi * (2 - 3*np.cos(self.psi) + cos3psi)
 
+        # find out the vertical location of the interface if the particle is in equilibrium.
+        costheta1   = np.cos(self.theta1)
+        cos3theta1  = costheta1 * costheta1 * costheta1
+        self.h0     = ( self.V + 1/3.0 * np.pi * (2 + 3*costheta1 - cos3theta1) ) / np.pi / self.l / self.l
+
+        self.deltaz = self.d + 1 + costheta1 - self.h0
+
+
 
     def __str__(self):
         """
         printalbe info        
-        print "h   force    H   psi\n"
+        print "deltaz   force    H   psi\n"
         """
-        self.entry = "{0:5f} \t {1:5f} \t {2:5f} \t {3:5f}\n".format(self.h, self.force, self.H, self.psi)
+        self.entry = "{0:5f} \t {1:5f} \t {2:5f} \t {3:5f}\n".format(self.deltaz, self.force, self.H, self.psi)
         return self.entry
 
     def draw(self):
@@ -135,7 +148,8 @@ class YL(object):
         ax.plot(-self.x, self.y, 'C0', linewidth = 4.0)
         ax.set_xlabel(r"$r/R$")
         ax.set_ylabel(r"$z/R$")
-        ax.set_title(r"$\psi = {0:.1f}, \theta = {1:.2f},d = {2:.2f},V = {3:.1f}$".format(self.psi/np.pi*180.0, self.theta1/np.pi*180.0, self.d, self.V))
+        ax.set_title(r"$\psi = {0:.1f}, \theta = {1:.2f},d = {2:.2f},V = {3:.1f}$"\
+            .format(self.psi/np.pi*180.0, self.theta1/np.pi*180.0, self.d, self.V))
         
         plt.tight_layout()
         plt.savefig("theta1{0:.1f}psi{1:.1f}.png".format(self.theta1/np.pi*180.0, self.psi/np.pi*180.0), transparent = True)
@@ -157,12 +171,12 @@ class YL(object):
 
 
 if __name__ == "__main__":
+
     # L:      length of your cylinder
     # theta1: contact angle at sphere
     # psi   : filling angle
 
-    model = YL(R = 10.6, L = 49.24, D = 50.0, theta1 = 180.0, psi = 90.0)
+    model = YL(R = 10.6, L = 49.24, D = 50.0, theta1 = 70.0, psi = 109.0)
     print(model)
     model.draw()
     print(model.meniscus())
-        

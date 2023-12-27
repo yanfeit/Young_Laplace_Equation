@@ -181,7 +181,8 @@ if __name__ == "__main__":
 
     # model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
 
-    model = Janus( hydrophobic = 112.06, hydrophilic = 51.832688, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
+    # model = Janus( hydrophobic = 112.06, hydrophilic = 51.832688, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
+    model = Janus( hydrophobic = 112.06, hydrophilic = 112.06, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
 
     displacement, force, L, R, D, theta1, psi, regime = [], [], [], [], [], [], [], []
         
