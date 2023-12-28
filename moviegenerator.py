@@ -8,7 +8,7 @@
 #    the GNU General Public License.
 #    -------------------------------------------------------------------------- 
 
-
+import os
 import younglaplace as yl
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,85 +19,98 @@ import argparse
 
 parser = argparse.ArgumentParser(description=
 "Young-Laplace Equation of Process of Particle Detachment")
-parser.add_argument("ifile", type=str, default="theory_data.h5", 
-help = "input HDF5 file")
+parser.add_argument("-ifile", type=str, default="theory_data.h5", 
+help = "input HDF5 file", required=False)
+parser.add_argument("-isFull", type=bool, default=True, 
+help = "Need both plot figures and generate data?", required=False)
 
 args = parser.parse_args()
 ifile = args.ifile
+isFull = args.isFull
 print(f"Input HDF5 file: {ifile}")
 
-# Process HDF5 data
-with h5py.File(ifile, 'r') as f:
+# Step(1): Process HDF5 data
+model = []
+f = h5py.File(ifile, 'r')
+for i in range(len(f.keys())):
+    group = f[f"{i}"]
+    content = dict()
+    content["R"] = group["R"][()]
+    content["D"] = group["D"][()]
+    content["L"] = group["L"][()]
+    content["d"] = group["d"][()]
+    content["l"] = group["l"][()]
+    content["theta1"] = group["theta1"][()]
+    content["psi"] = group["psi"][()]
+    content["x"] = group["x"][:]
+    content["y"] = group["y"][:]
+    content["force"] = group["force"][()]
+    content["V"] = group["V"][()]
+    content["deltaz"] = group["deltaz"][()]
+    content["regime"] = group["regime"][()]
+    model.append(content)
+
+f.close()
+
+if isFull:
+    # Step (2) : Initialize some memory for figures
+    displacement1, displacement2, displacement3 = [], [], []
+    force1, force2, force3 = [], [], []
+
+
+    # Step (3) : Plot figures
+    for i in range(0, len(model), 2):
+        if model[i]["psi"]/np.pi*180.0 > 90:
+            displacement1.append( model[i]["deltaz"] )
+            force1.append( model[i]["force"] )
+        elif int(model[i]["psi"]/np.pi*180.0) == 90:
+            displacement2.append( model[i]["deltaz"] )
+            force2.append( model[i]["force"] )
+        elif model[i]["psi"]/np.pi*180.0 < 90 :
+            displacement3.append( model[i]["deltaz"] )
+            force3.append( model[i]["force"] )
+
+        fig = plt.figure(figsize=(12, 4.5))
+
+        ax1 = fig.add_subplot(121, aspect = 'equal', ylim = (1.0, 9.0), xlim = (-5, 5))
+        e1 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 0.0, theta2 = 180.0, \
+        fill = True, fc = "g", ec = "g", lw = 0.0)
+        e2 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 180.0, theta2 = 360.0, \
+        fill = True, fc = "r", ec = "r", lw = 0.0)
+        ax1.add_patch(e1)
+        ax1.add_patch(e2)
+        ax1.plot( model[i]["x"], model[i]["y"], 'C0', linewidth = 4.0)
+        ax1.plot(-model[i]["x"], model[i]["y"], 'C0', linewidth = 4.0)
+        ax1.set_xlabel(r"$r/R$", fontsize = 24)
+        ax1.set_ylabel(r"$z/R$", fontsize = 24)
+        ax1.set_title(r"$\psi = {0:.1f}, \theta = {1:.2f},d = {2:.2f},V = {3:.1f}$"\
+        .format(model[i]["psi"]/np.pi*180.0, model[i]["theta1"]/np.pi*180.0, model[i]["d"], model[i]["V"]))
+
+        ax2 = fig.add_subplot(122, ylim = (-1, 1.25), xlim = (-2.5, 2.5))
+
+        ax2.plot(displacement1, force1, 'o-', color = "g", fillstyle = "none")
+        ax2.plot(displacement2, force2, 'o-', color = "b", fillstyle = "none")
+        ax2.plot(displacement3, force3, 'o-', color = "r", fillstyle = "none")
+
+        ax2.set_xlabel(r"$\Delta z/R$", fontsize = 24)
+        ax2.set_ylabel(r"$\frac{F}{2 \pi \gamma R}$", fontsize = 24)
+        if model[i]["regime"] == 1:
+            ax2.text(-2, 0.5, 'sliding', fontsize = 36)
+        elif model[i]["regime"] == 2:
+            ax2.text(-2, 0.5, 'pinned', fontsize = 36)
+
+        plt.tight_layout()
+        plt.savefig("theta1{0:.1f}psi{1:.1f}.png".format(model[i]["theta1"]/np.pi*180.0, \
+            model[i]["psi"]/np.pi*180.0), transparent = True)
+        plt.clf()
+        plt.close()
+
+# Step (4) ： Generate movies
+for i in range(0, len(model), 2):
+
+    ifilename = "theta1{0:.1f}psi{1:.1f}.png".format(model[i]["theta1"]/np.pi*180.0, \
+        model[i]["psi"]/np.pi*180.0)
+    framename = "frame%05d.png" % int(i/2)
+    copyfile(ifilename, framename)
     
-
-data = np.loadtxt("info.txt", skiprows = 1)
-
-R = data[:, 0]
-L = data[:, 1]
-D = data[:, 2]
-theta1 = data[:, 3]
-psi = data[:, 4]
-
-l = L[0]/R[0]
-d = D[0]/R[0]
-height = 50.0
-
-interface = 0.5 * 4.0/3.0 * np.pi/l/l/np.pi*R[0] + height
-
-displacement1 = []
-displacement2 = []
-displacement3 = []
-force1 = []
-force2 = []
-force3 = []
-sign = 1
-
-for i in range(0, len(R), 2):
-
-    model = yl.YL(R = R[i], L = L[i], D = D[i], theta1 = theta1[i], psi = psi[i])
-    if psi[i] > 90:
-        displacement1.append( (model.D + R[0] - interface)/R[0] )
-        force1.append( model.force )
-        sign = 1
-    elif int(psi[i]) ==  90:
-        displacement2.append( (model.D + R[0] - interface)/R[0] )
-        force2.append( model.force )
-        sign = 2
-    elif psi[i] < 90:
-        displacement3.append( (model.D + R[0] - interface)/R[0] )
-        force3.append( model.force )
-        sign = 1
-
-    fig = plt.figure(figsize=(12, 4.5))
-
-    ax1 = fig.add_subplot(121, aspect = 'equal', ylim = (1.0, 9.0), xlim = (-5, 5))
-    e1 = Wedge((0, model.d + 1), 1, theta1 = 0.0, theta2 = 180.0, fill = True, fc = "g", ec = "g", lw = 0.0)
-    e2 = Wedge((0, model.d + 1), 1, theta1 = 180.0, theta2 = 360.0, fill = True, fc = "r", ec = "r", lw = 0.0)
-    ax1.add_patch(e1)
-    ax1.add_patch(e2)
-    ax1.plot( model.x, model.y, 'C0', linewidth = 4.0)
-    ax1.plot(-model.x, model.y, 'C0', linewidth = 4.0)
-    ax1.set_xlabel(r"$r/R$", fontsize = 24)
-    ax1.set_ylabel(r"$z/R$", fontsize = 24)
-    ax1.set_title(r"$\psi = {0:.1f}, \theta = {1:.2f},d = {2:.2f},V = {3:.1f}$".format(model.psi/np.pi*180.0, model.theta1/np.pi*180.0, model.d, model.V))
-
-    ax2 = fig.add_subplot(122, ylim = (-1, 1.25), xlim = (-2.5, 2.5))
-
-    ax2.plot(displacement1, force1, 'o-', color = "g", fillstyle = "none")
-    ax2.plot(displacement2, force2, 'o-', color = "b", fillstyle = "none")
-    ax2.plot(displacement3, force3, 'o-', color = "r", fillstyle = "none")
-
-    ax2.set_xlabel(r"$\Delta z/R$", fontsize = 24)
-    ax2.set_ylabel(r"$\frac{F}{2 \pi \gamma R}$", fontsize = 24)
-    if sign == 1:
-        ax2.text(-2, 0.5, 'sliding', fontsize = 36)
-    elif sign == 2:
-        ax2.text(-2, 0.5, 'pinned', fontsize = 36)
-    
-
-
-    plt.tight_layout()
-    plt.savefig("theta1{0:.1f}psi{1:.1f}.png".format(model.theta1/np.pi*180.0, model.psi/np.pi*180.0), transparent = True)
-    plt.clf()
-
-
+os.system("ffmpeg -framerate 10 -i frame%05d.png -c:v libx264  janus.mp4")
