@@ -3,6 +3,9 @@ framework.drawio
 .$framework.drawio.bkp
 .$framework.drawio.dtmp
 
+# h5
+*.h5
+
 # pos directories
 pos*/*
 loc/*

@@ -17,7 +17,18 @@ from shutil import copyfile
 import h5py
 import argparse
 
+parser = argparse.ArgumentParser(description=
+"Young-Laplace Equation of Process of Particle Detachment")
+parser.add_argument("ifile", type=str, default="theory_data.h5", 
+help = "input HDF5 file")
 
+args = parser.parse_args()
+ifile = args.ifile
+print(f"Input HDF5 file: {ifile}")
+
+# Process HDF5 data
+with h5py.File(ifile, 'r') as f:
+    
 
 data = np.loadtxt("info.txt", skiprows = 1)
 

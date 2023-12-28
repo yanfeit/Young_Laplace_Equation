@@ -51,6 +51,7 @@ class Janus(object):
         R :                        radius of the janus particle
         D :                        distance between the bottom of the particle and bottom of the containder.
         interface :                location of the interface if the particle is in equilibrium.
+        regime :                   Sliding(1), pinned(2)
 
     methods :
         pullproc : pulling process of the particle and store to HDF5 files.
@@ -85,6 +86,7 @@ class Janus(object):
             cos3theta   = costheta*costheta*costheta
             self.interface = 1/3.0 * (2 + 3*costheta + cos3theta)/self.l/self.l + self.height
         
+        self.regime = []
         # Step (1) : 
         # Pulling up from a finite filling angle with a constant hydrophobic contact angle
         # to filling angle 90 degree with a constant hydrophobic contact angle
@@ -126,6 +128,7 @@ class Janus(object):
 
             model = yl.YL(R = self.R, L = self.L, D = Ds[i], theta1 = self.hydrophobic, psi = psis[i])
             self.models.append(model)
+            self.regime.append(1)
 
         # End of sliding contact angle at the hydropphobic part
         # Transition to a pinned contact angle condtion at the equator of the Janus
@@ -166,6 +169,7 @@ class Janus(object):
 
             model = yl.YL(R = self.R, L = self.L, D = Ds[i], theta1 = theta1s[i], psi = 90.0)
             self.models.append(model)
+            self.regime.append(2)
 
         # Step (3)
         # Keep pulling the particles to sliding contact angle condition at the
@@ -204,53 +208,74 @@ class Janus(object):
 
             model = yl.YL(R = self.R, L = self.L, D = Ds[i], theta1 = self.hydrophilic, psi = psis[i])
             self.models.append(model)
+            self.regime.append(1)
 
     def store2HDF5(self, ofilename="theory_data.h5"):
         """
         Store data to HDF5 files
         """
+        with h5py.File(ofilename, 'w') as f:
+            
+            for i in range(len(self.models)):
 
-
+                group = f.create_group("{}".format(i))
+                group.create_dataset("R", data = self.models[i].R)
+                group.create_dataset("D", data = self.models[i].D)
+                group.create_dataset("L", data = self.models[i].L)
+                group.create_dataset("d", data = self.models[i].d)
+                group.create_dataset("l", data = self.models[i].l)
+                group.create_dataset("theta1", data = self.models[i].theta1)
+                group.create_dataset("psi", data = self.models[i].psi)
+                group.create_dataset("x", data = self.models[i].x)
+                group.create_dataset("y", data = self.models[i].y)
+                group.create_dataset("force", data = self.models[i].force)
+                group.create_dataset("V", data = self.models[i].V)
+                group.create_dataset("deltaz", data = self.models[i].deltaz)
+                group.create_dataset("regime", data = self.regime[i])
+                # group.create_dataset("d", data = self.models[i].d)
 
 
 
 if __name__ == "__main__":
 
+    model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
+    model.store2HDF5()
+
     # model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
     # model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
 
-    model = Janus( hydrophobic = 112.06, hydrophilic = 112.06, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
+    # model = Janus( hydrophobic = 112.06, hydrophilic = 112.06, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
 
-    displacement, force, L, R, D, theta1, psi, regime = [], [], [], [], [], [], [], []
+    # displacement, force, L, R, D, theta1, psi, regime = [], [], [], [], [], [], [], []
         
-    for i in range(len(model.models)):
-        displacement.append((model.models[i].D + model.R  - model.interface)/model.R)
-        force.append(model.models[i].force)
-        L.append(model.models[i].L)
-        R.append(model.models[i].R)
-        D.append(model.models[i].D)
-        theta1.append(model.models[i].theta1)
-        psi.append(model.models[i].psi)
-        if model.models[i].psi > np.pi/2.0 - 0.01 and model.models[i].psi < np.pi/2.0 + 0.01:
-            regime.append("pinned")
-        else:
-            regime.append("sliding")
+    # for i in range(len(model.models)):
+    #     displacement.append((model.models[i].D + model.R  - model.interface)/model.R)
+    #     force.append(model.models[i].force)
+    #     L.append(model.models[i].L)
+    #     R.append(model.models[i].R)
+    #     D.append(model.models[i].D)
+    #     theta1.append(model.models[i].theta1)
+    #     psi.append(model.models[i].psi)
+    #     if model.models[i].psi > np.pi/2.0 - 0.01 and model.models[i].psi < np.pi/2.0 + 0.01:
+    #         regime.append("pinned")
+    #     else:
+    #         regime.append("sliding")
                             
-    plt.plot(displacement, force, '-')
-    plt.show()
+    # plt.plot(displacement, force, '-')
+    # plt.show()
     
-    ofile = open("sample.txt", 'w')
-    ofile.write("relative_distance  force  psi\n")
-    for i in range(len(force)):
+    # ofile = open("sample.txt", 'w')
+    # ofile.write("relative_distance  force  psi\n")
+    # for i in range(len(force)):
 
-        ofile.write("{0} {1} {2}\n".format(displacement[i], force[i], psi[i]))
+    #     ofile.write("{0} {1} {2}\n".format(displacement[i], force[i], psi[i]))
 
-    ofile.close()
+    # ofile.close()
 
-    ofile = open("info.txt", 'w')
-    ofile.write("R L D theta1 psi regime\n")
-    for i in range(len(force)):
+    # ofile = open("info.txt", 'w')
+    # ofile.write("R L D theta1 psi regime\n")
+    # for i in range(len(force)):
 
-        ofile.write("{0} {1} {2} {3} {4}\n".format(R[i], L[i], D[i], theta1[i]/np.pi*180.0, psi[i]/np.pi*180.0))
+    #     ofile.write("{0} {1} {2} {3} {4}\n".format(R[i], L[i], D[i], theta1[i]/np.pi*180.0, psi[i]/np.pi*180.0))
 
-    ofile.close()
+    # ofile.close()
