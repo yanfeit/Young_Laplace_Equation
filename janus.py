@@ -40,25 +40,21 @@ In the beginning of sliding region, the Janus particle is merged under the liqui
 The filling angle decreases with the undergoing pulling process. 
 It then pins at the equator of the sphere with a right filling angle. At some point, the process 
 is back to the sliding region with a rising menisci.
-
-input: 
-
-hydrophobic, hydrophilic : contact angle of the two part janus particle
-height :                   liquid height without considering the particle
-L :                        container radius      
-R :                        radius of the janus particle
-D :                        distance between the bottom of the particle and bottom of the containder.
-interface :                location of the interface if the particle is in equilibrium.
-
-output:
-
-HDF5
 """
 
 class Janus(object):
-    """
-    hydrophobic: contact angle of hydrophobic part of the sphere
-    hydrophilic: contact angle of hydrophilic part of the sphere
+    """   
+    input: 
+        hydrophobic, hydrophilic : contact angle of the two part of the janus particle
+        height :                   liquid height without considering the particle
+        L :                        container radius      
+        R :                        radius of the janus particle
+        D :                        distance between the bottom of the particle and bottom of the containder.
+        interface :                location of the interface if the particle is in equilibrium.
+
+    methods :
+        pullproc : pulling process of the particle and store to HDF5 files.
+        frmproc  : given the volume of liquids, solve the menisci and force, and store to HDF5 files.
     """
     def __init__(self, hydrophobic = 150.0, hydrophilic = 30.0, height = 50.0, L = 50.0, R = 10.0, D = 50.0):
 
@@ -213,7 +209,9 @@ class Janus(object):
         """
         Store data to HDF5 files
         """
-        
+
+
+
 
 
 if __name__ == "__main__":
