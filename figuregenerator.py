@@ -16,19 +16,19 @@ from shutil import copyfile
 import h5py
 import argparse
 
-parser = argparse.ArgumentParser(description=
-"Young-Laplace Equation of Process of Particle Detachment")
+parser = argparse.ArgumentParser(description=\
+    "Plot force and menisci profile figures from theoretical data")
 parser.add_argument("-ifile", type=str, default="theory_data.h5", \
     help = "input HDF5 file", required=False)
-parser.add_argument("-isFull", type=bool, default=True, \
-    help = "Need both plot figures and generate data?", required=False)
-parser.add_argument("-ofile", type= str, default="janus.mp4", \
-    help = "Output to a mp4 file")
+parser.add_argument("-oforcefig", type= str, default="force.pdf", \
+    help = "Output to a force displacement PDF file")
+parser.add_argument("-omfig", type= str, default="menisci.pdf", \
+    help = "Output to a menisci density profile PDF file")
 
 args = parser.parse_args()
 ifile = args.ifile
-isFull = args.isFull
-ofile = args.ofile
+oforcefig = args.oforcefig
+omfig = args.omfig
 print(f"Input HDF5 file: {ifile}")
 
 # Step(1): Process HDF5 data

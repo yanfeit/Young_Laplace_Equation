@@ -2,10 +2,9 @@
 #    Zhejiang Lab, Zhejiang, China
 #    Yanfei Tang, tangyf@zhejianglab.com
 
-#    Copyright (2023) Zhejiang Lab.  Under the terms of Contract
-#    2021PB0AC02 with Zhejiang Lab, the Zhejiang Government retains
-#    certain rights in this software.  This software is distributed under
-#    the GNU General Public License.
+#    Copyright (2023) Zhejiang Lab. This work is supported under the terms of 
+#    contract 2021PB0AC02 with Zhejiang Lab. 
+#    This software is distributed under the GNU General Public License.
 #    -------------------------------------------------------------------------- 
 
 import numpy as np

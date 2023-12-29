@@ -2,10 +2,9 @@
 #    Zhejiang Lab, Zhejiang, China
 #    Yanfei Tang, tangyf@zhejianglab.com
 
-#    Copyright (2023) Zhejiang Lab.  Under the terms of Contract
-#    2021PB0AC02 with Zhejiang Lab, the Zhejiang Government retains
-#    certain rights in this software.  This software is distributed under
-#    the GNU General Public License.
+#    Copyright (2023) Zhejiang Lab. This work is supported under the terms of 
+#    contract 2021PB0AC02 with Zhejiang Lab. 
+#    This software is distributed under the GNU General Public License.
 #    -------------------------------------------------------------------------- 
 
 import sys
@@ -232,7 +231,7 @@ class Janus(object):
                 group.create_dataset("regime", data = self.regime[i])
                 # group.create_dataset("d", data = self.models[i].d)
 
-            groupt = f.create_dataset("target")
+            groupt = f.create_group("target")
             groupt.create_dataset("R", data = self.targetmodel.R)
             groupt.create_dataset("D", data = self.targetmodel.D)
             groupt.create_dataset("L", data = self.targetmodel.L)
@@ -240,15 +239,15 @@ class Janus(object):
             groupt.create_dataset("l", data = self.targetmodel.l)
             groupt.create_dataset("theta1", data = self.targetmodel.theta1)
             groupt.create_dataset("psi", data = self.targetmodel.psi)
-            groupt.create_dataset("x", data = self.models[i].x)
-            groupt.create_dataset("y", data = self.models[i].y)
-            groupt.create_dataset("force", data = self.models[i].force)
-            groupt.create_dataset("V", data = self.models[i].V)
-            groupt.create_dataset("deltaz", data = self.models[i].deltaz)
+            groupt.create_dataset("x", data = self.targetmodel.x)
+            groupt.create_dataset("y", data = self.targetmodel.y)
+            groupt.create_dataset("force", data = self.targetmodel.force)
+            groupt.create_dataset("V", data = self.targetmodel.V)
+            groupt.create_dataset("deltaz", data = self.targetmodel.deltaz)
 
 
 
-    def frmproc(self, ofilename="frm_data.h5"):
+    def frmproc(self):
         """
         To solve the profile of the menisci given a reasonable D,
         we should first find out a whole pulling process.
@@ -281,7 +280,8 @@ class Janus(object):
 if __name__ == "__main__":
 
     model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
-    model.pullproc()
+    model.frmproc()
+    model.storeHDF5()
 
     # model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
     # model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
