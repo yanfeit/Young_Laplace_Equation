@@ -8,17 +8,14 @@
 #    the GNU General Public License.
 #    -------------------------------------------------------------------------- 
 
+import sys
 import younglaplace as yl
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
-# from   matplotlib.patches import Circle
-# import scipy.special as spe
-# import sys
-
 docstr = """
-The script generates a quasi-static pulling process of a Janus particle from 
+The script generates a quasi-static pulling process of a homogenous particle from 
 the liquid. The Janus particle has a hydrophobic part of the hemisphere at the top and 
 a hydrophilic part of the hemisphere at the bottom. 
 
@@ -74,18 +71,20 @@ class Janus(object):
         # definition of the interface
         # In the equilibrium state, half of the particle is merged under the water
         # we can computed the location of the interface.
-        if self.hydrophilic != self.hydrophobic:
+        # if self.hydrophilic != self.hydrophobic:
             # this is the case for janus particle,
             # we consider hydrophobic > 90.0 and hydrophilic < 90.0
             # other cases will be considered in future.
-            self.interface = 0.5 *4.0/3.0*np.pi/self.l/self.l/np.pi*self.R + self.height
-        else:
+        self.interface = 0.5 *4.0/3.0*np.pi/self.l/self.l/np.pi*self.R + self.height
+        # else:
             # the case should seamlessly reduces to homogenous spherical particle case.
-            theta_angle = self.hydrophilic / 180.0 * np.pi
-            costheta    = np.cos(theta_angle)
-            cos3theta   = costheta*costheta*costheta
-            self.interface = 1/3.0 * (2 + 3*costheta + cos3theta)/self.l/self.l + self.height
-        
+        #    theta_angle = self.hydrophilic / 180.0 * np.pi
+        #    costheta    = np.cos(theta_angle)
+        #    cos3theta   = costheta*costheta*costheta
+        #    self.interface = 1/3.0 * (2 + 3*costheta + cos3theta)/self.l/self.l + self.height
+    
+    def pullproc(self):
+
         self.regime = []
         # Step (1) : 
         # Pulling up from a finite filling angle with a constant hydrophobic contact angle
@@ -210,10 +209,9 @@ class Janus(object):
             self.models.append(model)
             self.regime.append(1)
 
-    def store2HDF5(self, ofilename="theory_data.h5"):
-        """
-        Store data to HDF5 files
-        """
+
+    def storeHDF5(self, ofilename="theory_data.h5"):
+        # Store Data to HDF5 format
         with h5py.File(ofilename, 'w') as f:
             
             for i in range(len(self.models)):
@@ -234,12 +232,56 @@ class Janus(object):
                 group.create_dataset("regime", data = self.regime[i])
                 # group.create_dataset("d", data = self.models[i].d)
 
+            groupt = f.create_dataset("target")
+            groupt.create_dataset("R", data = self.targetmodel.R)
+            groupt.create_dataset("D", data = self.targetmodel.D)
+            groupt.create_dataset("L", data = self.targetmodel.L)
+            groupt.create_dataset("d", data = self.targetmodel.d)
+            groupt.create_dataset("l", data = self.targetmodel.l)
+            groupt.create_dataset("theta1", data = self.targetmodel.theta1)
+            groupt.create_dataset("psi", data = self.targetmodel.psi)
+            groupt.create_dataset("x", data = self.models[i].x)
+            groupt.create_dataset("y", data = self.models[i].y)
+            groupt.create_dataset("force", data = self.models[i].force)
+            groupt.create_dataset("V", data = self.models[i].V)
+            groupt.create_dataset("deltaz", data = self.models[i].deltaz)
 
+
+
+    def frmproc(self, ofilename="frm_data.h5"):
+        """
+        To solve the profile of the menisci given a reasonable D,
+        we should first find out a whole pulling process.
+        Then we match D by using the data from self.models.d.
+        """
+        self.pullproc()
+
+        # Determine D is in the range of the pulling process which the menisci can form.
+        if self.d < self.models[0].d or self.d > self.models[-1].d:
+            sys.exit("Can't form a menisci")
+        
+        idx = 0
+        for i in range(len(self.models)):
+            if self.d < self.models[i].d:
+                idx = i
+                break
+
+        targetD = ((self.models[idx].d + self.models[idx-1].d)/2.0  * self.R ) # convert to nonscaled unit
+        targettheta1 = ((self.models[idx].theta1 + self.models[idx-1].theta1)/2.0  /np.pi * 180.0 )
+        targetpsi = ((self.models[idx].psi + self.models[idx-1].psi)/2.0  / np.pi * 180.0)
+
+        self.targetmodel = yl.YL(R = self.R, L = self.L, D = targetD, theta1 = targettheta1, psi = targetpsi)
+
+
+
+
+
+        
 
 if __name__ == "__main__":
 
     model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
-    model.store2HDF5()
+    model.pullproc()
 
     # model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
     # model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)

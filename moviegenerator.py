@@ -32,7 +32,7 @@ print(f"Input HDF5 file: {ifile}")
 # Step(1): Process HDF5 data
 model = []
 f = h5py.File(ifile, 'r')
-for i in range(len(f.keys())):
+for i in range(len(f.keys()) - 1):
     group = f[f"{i}"]
     content = dict()
     content["R"] = group["R"][()]
