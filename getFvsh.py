@@ -41,6 +41,9 @@ with open("Fvsh_Ans100.txt", 'w') as ofile:
         ofile.write(str(h[i]) + "\t" + str(aveForce[i]) + "\t" + str(stdForce[i]) + "\n")
 
 
+
+
+
 # plt.plot(h, aveForce,'o-')
 # plt.xlabel(r"$z/\sigma$", fontsize= 16)
 # plt.ylabel(r"$F_{colloid-particles}^{z}/(\epsilon/\sigma)$", fontsize = 16)
