@@ -10,6 +10,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+import h5py
 
 docstr = """
 Collect and analyze data from LAMMPS simulator.
@@ -37,7 +38,6 @@ parser.add_argument("-height", type = int, default=25, \
 parser.add_argument("-endh", type = int, default=62, \
     help= "Ending center of the particle, add discprancy")
 
-
 args = parser.parse_args()
 idir = args.idir
 ofile = args.ofile
@@ -49,7 +49,7 @@ print(f"Input Directory: {idir}")
 # height   = 25
 aveForce, stdForce = [], []
 
-# 
+# Collect data from ferg.txt files in each directory.
 for i in range(2, endh, 2):
     # I use pos{i} for storing different measurements.
     dirname   = idir +  "pos{0}/".format(i)
@@ -59,26 +59,11 @@ for i in range(2, endh, 2):
     aveForce.append(force)
     stdForce.append(force_std)
 
-
-
-h = np.linspace(27, 85, 30)
+h = height + np.array(range(2, endh, 2))
 aveForce = np.array(aveForce)
+stdForce = np.array(stdForce)
 
-with open("Fvsh_Ans100.txt", 'w') as ofile:
-    ofile.write("H \t Force \t std\n")
-    for i in range(len(h)):
-        ofile.write(str(h[i]) + "\t" + str(aveForce[i]) + "\t" + str(stdForce[i]) + "\n")
+dataset = np.vstack((h, aveForce, stdForce)).transpose()
 
-
-
-
-
-# plt.plot(h, aveForce,'o-')
-# plt.xlabel(r"$z/\sigma$", fontsize= 16)
-# plt.ylabel(r"$F_{colloid-particles}^{z}/(\epsilon/\sigma)$", fontsize = 16)
-# plt.savefig("aveForce.jpg")
-# plt.show()
-
-
-
-
+with h5py.File(ofile, 'w') as f:
+    f.create_dataset("force", data = dataset)
