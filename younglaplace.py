@@ -50,6 +50,7 @@ class YL(object):
             and boundary condition at the wall! / inconsistent with the PRE paper.
     Dy     : (scalar) vertical scaled interface distortion length, 
             delta h in my PRE 98, 032802 paper.
+    deltaz : particle displacement away from the equilibrium state.
     """
 
     def __init__(self, R = 10.35, L = 50.0, D = 50.0, theta1 = 30.0, psi = 130.0):

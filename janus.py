@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import h5py
 
 docstr = """
-The script generates a quasi-static pulling process of a homogenous particle from 
+The script generates a quasi-static pulling process of a janus particle from 
 the liquid. The Janus particle has a hydrophobic part of the hemisphere at the top and 
 a hydrophilic part of the hemisphere at the bottom. 
 
@@ -270,9 +270,6 @@ class Janus(object):
         targetpsi = ((self.models[idx].psi + self.models[idx-1].psi)/2.0  / np.pi * 180.0)
 
         self.targetmodel = yl.YL(R = self.R, L = self.L, D = targetD, theta1 = targettheta1, psi = targetpsi)
-
-
-
 
 
         
