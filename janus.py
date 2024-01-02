@@ -279,42 +279,5 @@ if __name__ == "__main__":
     model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
     model.frmproc()
     model.storeHDF5()
-
-    # model = Janus( hydrophobic = 123.25, hydrophilic = 52.68, height = 50.9, L = 49.3, R = 10.9, D = 50.0)
-    # model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
-
-    # model = Janus( hydrophobic = 112.06, hydrophilic = 112.06, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
-
-    # displacement, force, L, R, D, theta1, psi, regime = [], [], [], [], [], [], [], []
-        
-    # for i in range(len(model.models)):
-    #     displacement.append((model.models[i].D + model.R  - model.interface)/model.R)
-    #     force.append(model.models[i].force)
-    #     L.append(model.models[i].L)
-    #     R.append(model.models[i].R)
-    #     D.append(model.models[i].D)
-    #     theta1.append(model.models[i].theta1)
-    #     psi.append(model.models[i].psi)
-    #     if model.models[i].psi > np.pi/2.0 - 0.01 and model.models[i].psi < np.pi/2.0 + 0.01:
-    #         regime.append("pinned")
-    #     else:
-    #         regime.append("sliding")
-                            
-    # plt.plot(displacement, force, '-')
-    # plt.show()
     
-    # ofile = open("sample.txt", 'w')
-    # ofile.write("relative_distance  force  psi\n")
-    # for i in range(len(force)):
-
-    #     ofile.write("{0} {1} {2}\n".format(displacement[i], force[i], psi[i]))
-
-    # ofile.close()
-
-    # ofile = open("info.txt", 'w')
-    # ofile.write("R L D theta1 psi regime\n")
-    # for i in range(len(force)):
-
-    #     ofile.write("{0} {1} {2} {3} {4}\n".format(R[i], L[i], D[i], theta1[i]/np.pi*180.0, psi[i]/np.pi*180.0))
-
-    # ofile.close()
+        

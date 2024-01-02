@@ -166,6 +166,6 @@ class Homogeneous(object):
 
 if __name__ == "__main__":
 
-    model = Homogeneous( angle = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 40.0)
+    model = Homogeneous( angle = 51.83, height = 50.0, L = 50.0, R = 10.0, D = 40.0)
     model.frmproc()
     model.storeHDF5()
