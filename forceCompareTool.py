@@ -22,10 +22,13 @@ parser.add_argument("-ifile1", type=str, default="theory_data.h5", \
     help = "Theoretical HDF5 data", required=False)
 parser.add_argument("-ifile2", type= str, default="simulation_force.h5", \
     help = "Simulational force displacement HDF5 data", required=False)
+parser.add_argument("-ofile", type = str,default="force.pdf", \
+    help = "Output to a figure file" )
 
 args = parser.parse_args()
 thydataname = args.ifile1
 sltdataname = args.ifile2
+ofilename   = args.ofile
 
 print(f"Input theoretical dataset : {thydataname}")
 print(f"Input simulational dataset : {sltdataname}")
@@ -89,5 +92,5 @@ plt.xticks(fontsize = 16)
 plt.yticks(fontsize = 24)
 
 plt.tight_layout()
-plt.savefig("force.pdf")
+plt.savefig(ofilename)
 plt.show()

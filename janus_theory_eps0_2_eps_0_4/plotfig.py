@@ -46,5 +46,3 @@ plt.yticks(fontsize = 24)
 plt.tight_layout()
 plt.savefig("force.pdf")
 plt.show()
-
-
