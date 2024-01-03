@@ -1,5 +1,11 @@
-#!/bin/python
-# Yanfei Tang
+#    -------------------------------------------------------------------------- 
+#    Zhejiang Lab, Zhejiang, China
+#    Yanfei Tang, tangyf@zhejianglab.com
+
+#    Copyright (2023) Zhejiang Lab. This work is supported under the terms of 
+#    contract 2021PB0AC02 with Zhejiang Lab. 
+#    This software is distributed under the GNU General Public License.
+#    -------------------------------------------------------------------------- 
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,10 +13,7 @@ import dump as dp
 import sys
 from scipy.optimize import curve_fit
 import h5py
-
-"""
-Usage: calrho.py lammps_dump_file output.h5
-"""
+import argparse
 
 def func(r, r0, ds):
     rho_l = 0.927
@@ -31,7 +34,20 @@ def ringvol(r0, r1, h):
     """
     dS = np.pi * (r1 * r1 - r0 * r0)
     return dS * h
-    
+
+parser = argparse.ArgumentParser(description=\
+    "Collect and analyze data from LAMMPS dump to get the density profiles.")
+parser.add_argument("-idir", type=str, default="./", \
+    help = "directory folder", required=False)
+parser.add_argument("-ofile", type= str, default="simulation_force.h5", \
+    help = "Output to a force displacement HDF5 data")
+parser.add_argument("-height", type = int, default=25, \
+    help= "Initial center of the particle")
+parser.add_argument("-endh", type = int, default=62, \
+    help= "Ending center of the particle, add discprancy")    
+
+
+
 
 d = dp.dump(sys.argv[1])
 binsize = 1.0
