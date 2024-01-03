@@ -228,6 +228,7 @@ class Janus(object):
                 group.create_dataset("force", data = self.models[i].force)
                 group.create_dataset("V", data = self.models[i].V)
                 group.create_dataset("deltaz", data = self.models[i].deltaz)
+                group.create_dataset("h0", data=self.models[i].h0)
                 group.create_dataset("regime", data = self.regime[i])
                 # group.create_dataset("d", data = self.models[i].d)
 
@@ -244,6 +245,7 @@ class Janus(object):
             groupt.create_dataset("force", data = self.targetmodel.force)
             groupt.create_dataset("V", data = self.targetmodel.V)
             groupt.create_dataset("deltaz", data = self.targetmodel.deltaz)
+            groupt.create_dataset("h0", data=self.targetmodel.h0)
 
 
 
@@ -279,5 +281,4 @@ if __name__ == "__main__":
     model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
     model.frmproc()
     model.storeHDF5()
-    
-        
+
