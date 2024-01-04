@@ -37,14 +37,10 @@ def ringvol(r0, r1, h):
 
 parser = argparse.ArgumentParser(description=\
     "Collect and analyze data from LAMMPS dump to get the density profiles.")
-parser.add_argument("-idir", type=str, default="./", \
-    help = "directory folder", required=False)
-parser.add_argument("-ofile", type= str, default="simulation_force.h5", \
-    help = "Output to a force displacement HDF5 data")
-parser.add_argument("-height", type = int, default=25, \
-    help= "Initial center of the particle")
-parser.add_argument("-endh", type = int, default=62, \
-    help= "Ending center of the particle, add discprancy")    
+parser.add_argument("-idump", type=str, default="./pos60/dump_janus_measure.1", \
+    help = "dump file", required=False)
+parser.add_argument("-ofile", type= str, default="simulation_profile.h5", \
+    help = "Output to a HDF5 data set") 
 
 
 
