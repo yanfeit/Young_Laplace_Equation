@@ -37,23 +37,28 @@ def ringvol(r0, r1, h):
 
 parser = argparse.ArgumentParser(description=\
     "Collect and analyze data from LAMMPS dump to get the density profiles.")
-parser.add_argument("-idump", type=str, default="./pos60/dump_janus_measure.1", \
+parser.add_argument("-idump", type=str, default="./pos40/dump_janus_measure.1", \
     help = "dump file", required=False)
 parser.add_argument("-ofile", type= str, default="simulation_profile.h5", \
     help = "Output to a HDF5 data set") 
 
 
+args  = parser.parse_args()
+idump = args.idump
+ofile = args.ofile
 
+print(f"Input Dump File path : {idump}")
+print(f"Ouput Data File path : {ofile}")
 
-d = dp.dump(sys.argv[1])
-binsize = 1.0
+d = dp.dump(idump)
 
 # Dimension calculation
-axis = (50.0, 50.0)
-span = (50.0, 100.0)
-Nr, Nz = int(span[0]/binsize), int(span[1]/binsize)
-rho = np.zeros((Nz, Nr), dtype= 'float64')
-vol = np.zeros(Nr, dtype = "float64")
+binsize = 1.0
+axis    = (50.0, 50.0)
+span    = (50.0, 100.0)
+Nr, Nz  = int(span[0]/binsize), int(span[1]/binsize)
+rho     = np.zeros((Nz, Nr), dtype= 'float64')
+vol     = np.zeros(Nr, dtype = "float64")
 
 for i in range(len(vol)):
     vol[i] = ringvol(binsize * i, binsize * (i+1), binsize)
@@ -77,11 +82,11 @@ rho = rho/vol/d.nsnaps
 
 # Data Output
 
-for i in range(Nr):
-    rticks = (i + 0.5) * binsize
+# for i in range(Nr):
+#     rticks = (i + 0.5) * binsize
 
-for i in range(Nz):
-    zticks = (i + 0.5) * binsize
+# for i in range(Nz):
+#     zticks = (i + 0.5) * binsize
 
 rdata  = np.arange(binsize/2.0, span[0] + binsize/2.0, binsize)
 zdata  = np.arange(binsize/2.0, span[1] + binsize/2.0, binsize)
@@ -91,18 +96,16 @@ for i in range(Nr):
     popt, pcov = curve_fit(func, zdata[4:-4], rho[4:-4, i])
     interface.append(popt[0])
 
-
-# rho, 二维矩阵, nz=100, nr=50, 
-# rdata, r方向上的坐标，长度=50
+# rho,       二维矩阵, nz=100, nr=50, 
+# rdata,     r方向上的坐标，长度=50
 # interface, 气液界面的z坐标， 
-# rticks, r方向的？
-# zticks，z方向的？
+# rticks,    r方向的？
+# zticks，   z方向的？
 
-hdfFile = h5py.File(sys.argv[2], 'w')
-hdfFile.create_dataset("rho", data = rho)
-hdfFile.create_dataset("rdata", data = rdata)
+hdfFile = h5py.File(ofile, 'w')
+hdfFile.create_dataset("rho",       data = rho)
+hdfFile.create_dataset("rdata",     data = rdata)
+hdfFile.create_dataset("zdata",     data = zdata)
 hdfFile.create_dataset("interface", data = interface)
-hdfFile.create_dataset("rticks", data = rticks)
-hdfFile.create_dataset("zticks", data = zticks)
 
 hdfFile.close()
