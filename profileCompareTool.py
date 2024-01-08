@@ -22,11 +22,14 @@ parser.add_argument("-thy", type= str, default="theory_data.h5", \
     help = "Theoretical results of HDF5 datasets")
 parser.add_argument("-ofile", type= str, default="profile_compare.pdf", \
     help = "Theoretical results of HDF5 datasets")
+parser.add_argument("-ylimn", type= int, default=3, \
+    help = "Y axis limit in the neg direction")
 
 args  = parser.parse_args()
 sln = args.sln
 thy = args.thy
 ofile = args.ofile
+ylim_neg = args.ylimn
 
 print(f"Input Simulational HDF5 datasets : {sln}")
 print(f"Input Theoretical HDF5 datasets : {thy}")
@@ -52,8 +55,6 @@ with h5py.File(thy, 'r') as f:
     psi = groupt["psi"][()]
 
 
-
-
 # Draw the Plots
 fig = plt.figure(figsize=(6, 6))
 ax  = fig.add_subplot()
@@ -72,7 +73,7 @@ fill = True, fc = "cyan", ec = "cyan", lw = 0.0)
 ax.add_patch(e1)
 ax.add_patch(e2)
 
-ylim_neg = y[-1]-1
+# ylim_neg = y[-1]-1
 xlim_pos = r[-1]/R 
 ylim_pos = ylim_neg + xlim_pos 
 
