@@ -34,10 +34,10 @@ print(f"Output density profile comparison figure : {ofile}")
 # Fetch the Data from HDF5 datasets
 with h5py.File(sln, 'r') as f:
     #
-    rho       = f.get('rho')
-    interface = f.get('interface')
-    rdata     = f.get('rdata')
-    zdata     = f.get('zdata')
+    rho       = f.get('rho')[:]
+    interface = f.get('interface')[:]
+    rdata     = f.get('rdata')[:]
+    zdata     = f.get('zdata')[:]
 
 with h5py.File(thy, 'r') as f:
     groupt = f["target"]
@@ -45,12 +45,18 @@ with h5py.File(thy, 'r') as f:
     y = groupt["y"][:]
 
 
-
-
-
-
-
 # Draw the Plots
 
+z, r = np.mgrid[zdata,
+                rdata]
 
-# Output to figure
+plt.pcolormesh(r, z, rho, cmap = "Blues")
+
+plt.plot(rdata, interface, marker = "o", fillstyle = "none")
+
+plt.plot(x, y, 'r')
+plt.axis("equal")
+
+plt.savefig(ofile)
+
+
