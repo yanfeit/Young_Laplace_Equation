@@ -19,6 +19,13 @@ framework.drawio
 # pos directories
 pos*/*
 loc/*
+bcc_homo_eps0.445/
+hollow_homo_eps0_3/
+hollow_homo_eps0_4/
+hollow_homo_eps0_5/
+janus_bcc/
+janus_theory_eps0_2_eps_0_4/
+janus_thoery_eps0_2_eps_0_5/
 
 # pictures  and PDF files
 *.png
@@ -26,7 +33,13 @@ loc/*
 *.mp4
 
 # Text file
-*.txt
+YL_Ans0.txt
+YL_Ans100.txt
+sample.txt
+info.txt
+homo_eps0.5.txt
+Fvsh_Ans100.txt
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
