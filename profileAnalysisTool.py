@@ -90,6 +90,9 @@ rho = rho/vol/d.nsnaps
 
 rdata  = np.arange(binsize/2.0, span[0] + binsize/2.0, binsize)
 zdata  = np.arange(binsize/2.0, span[1] + binsize/2.0, binsize)
+
+r = np.arange(0, span[0]+binsize, binsize)
+z = np.arange(0, span[1]+binsize, binsize)
 interface = []
 
 for i in range(Nr):
@@ -98,14 +101,16 @@ for i in range(Nr):
 
 # rho,       二维矩阵, nz=100, nr=50, 
 # rdata,     r方向上的坐标，长度=50
+# zdata,     z方向上的坐标，长度=100
 # interface, 气液界面的z坐标， 
-# rticks,    r方向的？
-# zticks，   z方向的？
+
 
 hdfFile = h5py.File(ofile, 'w')
 hdfFile.create_dataset("rho",       data = rho)
 hdfFile.create_dataset("rdata",     data = rdata)
 hdfFile.create_dataset("zdata",     data = zdata)
+hdfFile.create_dataset("r",         data = r)
+hdfFile.create_dataset("z",         data = z)
 hdfFile.create_dataset("interface", data = interface)
 
 hdfFile.close()
