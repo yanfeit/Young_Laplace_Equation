@@ -38,7 +38,7 @@ with h5py.File(sltdataname, 'r') as f:
     sltdata = f["force"][:]
 
 # Load Data from theory
-force, deltaz, psi = [], [], []
+force, deltaz, psi, deltazp = [], [], [], []
 with h5py.File(thydataname, 'r') as f:
     groupt = f["target"]
     D = groupt["D"][()]
@@ -50,6 +50,7 @@ with h5py.File(thydataname, 'r') as f:
         group = f[f"{i}"]
         force.append (group["force"][()])
         deltaz.append(group["deltaz"][()])
+        deltazp.append(group["deltazp"][()])
         psi.append   (group["psi"][()])
 
 
@@ -69,23 +70,23 @@ psi    = np.array(psi)
 displacement1, displacement2, displacement3, force1, force2, force3 = [], [], [], [], [], []
 for i in range(len(force)):
     if psi[i] >= np.pi/2.0 + 0.01:
-        displacement1.append(deltaz[i])
+        displacement1.append(deltazp[i])
         force1.append(force[i])
     elif psi[i] > (np.pi/2.0 - 0.01) and psi[i] < (np.pi/2.0 + 0.01):
-        displacement2.append(deltaz[i])
+        displacement2.append(deltazp[i])
         force2.append(force[i])
     elif psi[i] <= (np.pi/2.0 - 0.01):
-        displacement3.append(deltaz[i])
+        displacement3.append(deltazp[i])
         force3.append(force[i])
 
 plt.plot(displacement1, force1, '-', color = "g")
 plt.plot(displacement2, force2, '-', color = "b")
 plt.plot(displacement3, force3, '-', color = "r")
 
-plt.axhline(y = 0.0)
-plt.axvline(x = 0.0)
+# plt.axhline(y = 0.0)
+# plt.axvline(x = 0.0)
 
-plt.xlabel(r"$z/R$", fontsize = 24)
+plt.xlabel(r"$\Delta z'/R$", fontsize = 24)
 plt.ylabel(r"$\frac{F}{2\pi \sigma R}$", fontsize  =24)
 
 plt.xticks(fontsize = 16)

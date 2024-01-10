@@ -122,7 +122,10 @@ class YL(object):
         cos3theta1  = costheta1 * costheta1 * costheta1
         self.h0     = ( self.V + 1/3.0 * np.pi * (2 + 3*costheta1 - cos3theta1) ) / np.pi / self.l / self.l
 
-        self.deltaz = self.d + 1 + costheta1 - self.h0
+        self.deltaz = self.d + 1  - self.h0 + costheta1
+
+        # Add a new
+        self.deltazp = self.d + 1 - self.h0
 
 
 

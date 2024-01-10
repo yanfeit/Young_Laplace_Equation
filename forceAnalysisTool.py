@@ -36,7 +36,7 @@ parser.add_argument("-ofile", type= str, default="simulation_force.h5", \
 parser.add_argument("-height", type = int, default=25, \
     help= "Initial center of the particle")
 parser.add_argument("-endh", type = int, default=62, \
-    help= "Ending center of the particle, add discprancy")
+    help= "Lift height for the particle, add discprancy")
 
 args = parser.parse_args()
 idir = args.idir

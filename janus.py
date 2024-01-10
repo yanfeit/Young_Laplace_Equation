@@ -230,6 +230,7 @@ class Janus(object):
                 group.create_dataset("deltaz", data = self.models[i].deltaz)
                 group.create_dataset("h0", data=self.models[i].h0)
                 group.create_dataset("regime", data = self.regime[i])
+                group.create_dataset("deltazp", data = self.models[i].deltazp)
                 # group.create_dataset("d", data = self.models[i].d)
 
             groupt = f.create_group("target")
@@ -246,6 +247,7 @@ class Janus(object):
             groupt.create_dataset("V", data = self.targetmodel.V)
             groupt.create_dataset("deltaz", data = self.targetmodel.deltaz)
             groupt.create_dataset("h0", data=self.targetmodel.h0)
+            groupt.create_dataset("deltazp", data=self.targetmodel.deltazp)
 
 
 
