@@ -286,17 +286,27 @@ if __name__ == "__main__":
     parser.add_argument("-ofile", type= str, default="theory_data.h5", \
         help = "Output to a HDF5 data")
     parser.add_argument("-phobic", type = float, default=112.06, \
-        help= "Initial center of the particle")
-    parser.add_argument("-endh", type = float, default=62, \
-        help= "Lift height for the particle, add discprancy")
+        help = "contact angle of the hydrophobic part")
+    parser.add_argument("-philic", type = float, default=51.83, \
+        help = "contact angle of the hydrophilic part")
+    parser.add_argument("-height", type = float, default=50.9, \
+        help = "height of interface without particle")
+    parser.add_argument("-L", type = float, default=49.3, \
+        help = "effective radius of the container")
+    parser.add_argument("-R", type = float, default=10.5, \
+        help = "effective radius of the particle")
+    parser.add_argument("-D", type = float, default=50.0, \
+        help = "effective distance between the bottom of the container and the bottom of the particle")
 
-    args = parser.parse_args()
-    idir = args.idir
-    ofile = args.ofile
-    height = args.height
-    endh  = args.endh
+    args   = parser.parse_args()
+    ofile  = args.ofile
+    phobic = float(args.phobic)
+    philic = float(args.philic)
+    h      = float(args.height)
+    L      = float(args.L)
+    R      = float(args.R)
+    D      = float(args.D)
 
-    model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
+    model = Janus( hydrophobic = phobic, hydrophilic = philic, height = h, L = L, R = R, D = D)
     model.frmproc()
-    model.storeHDF5("theory_data.h5")
-
+    model.storeHDF5(ofile)
