@@ -12,6 +12,7 @@ import younglaplace as yl
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
+import argparse
 
 docstr = """
 The script generates a quasi-static pulling process of a janus particle from 
@@ -280,7 +281,22 @@ class Janus(object):
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser(description=\
+        "Young-Laplace Equation Solver for the Janus Particle")
+    parser.add_argument("-ofile", type= str, default="theory_data.h5", \
+        help = "Output to a HDF5 data")
+    parser.add_argument("-phobic", type = float, default=112.06, \
+        help= "Initial center of the particle")
+    parser.add_argument("-endh", type = float, default=62, \
+        help= "Lift height for the particle, add discprancy")
+
+    args = parser.parse_args()
+    idir = args.idir
+    ofile = args.ofile
+    height = args.height
+    endh  = args.endh
+
     model = Janus( hydrophobic = 112.06, hydrophilic = 51.83, height = 50.9, L = 49.3, R = 10.5, D = 50.0)
     model.frmproc()
-    model.storeHDF5()
+    model.storeHDF5("theory_data.h5")
 
