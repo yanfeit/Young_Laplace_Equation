@@ -1,6 +1,6 @@
-# Young-Laplace Equation Solver
+# Post-Analysis Tools for Pulling a Janus Particle
 
-![pic](janus.1.gif)
+![Alt Text](./janus.1.gif)
 
 Analytical Solution of Young Laplace Equation for cylindrical coordinates
 
