@@ -60,7 +60,7 @@ exp_x = sltdata[:, 0]/R - h0
 exp_F = -sltdata[:, 1]/2/np.pi/gamma/R
 exp_err = sltdata[:, 2]/2/np.pi/gamma/R
 
-plt.errorbar(exp_x, exp_F, exp_err, fmt = "o--", capsize = 2.0, fillstyle = 'none', color = 'r')
+plt.errorbar(exp_x, exp_F, exp_err, fmt = "o", capsize = 2.0, fillstyle = 'none', color = 'k', label = "Simulation")
 
 # Categorize the data, plot the theoretical data
 force  = np.array(force)
@@ -80,7 +80,7 @@ for i in range(len(force)):
         force3.append(force[i])
 
 plt.plot(displacement1, force1, '-', color = "g")
-plt.plot(displacement2, force2, '-', color = "b")
+plt.plot(displacement2, force2, '-', color = "b", label = "Theory")
 plt.plot(displacement3, force3, '-', color = "r")
 
 # plt.axhline(y = 0.0)
@@ -90,8 +90,10 @@ plt.xlabel(r"$\Delta z'/R$", fontsize = 24)
 plt.ylabel(r"$\frac{F}{2\pi \sigma R}$", fontsize  =24)
 
 plt.xticks(fontsize = 16)
-plt.yticks(fontsize = 24)
+plt.yticks(fontsize = 16)
+
+plt.legend(loc='upper left', frameon = False)
 
 plt.tight_layout()
 plt.savefig(ofilename)
-plt.show()
+# plt.show()
