@@ -47,6 +47,7 @@ for i in range(len(f.keys()) - 1):
     content["V"] = group["V"][()]
     content["deltaz"] = group["deltaz"][()]
     content["regime"] = group["regime"][()]
+    content["deltazp"] = group["deltazp"][()]
     model.append(content)
 
 f.close()
@@ -58,13 +59,65 @@ force1, force2, force3 = [], [], []
 
 for i in range(0, len(model), 2):
     if model[i]["psi"]/np.pi*180.0 > 90:
-        displacement1.append( model[i]["deltaz"] )
+        displacement1.append( model[i]["deltazp"] )
         force1.append( model[i]["force"] )
     elif int(model[i]["psi"]/np.pi*180.0) == 90:
-        displacement2.append( model[i]["deltaz"] )
+        displacement2.append( model[i]["deltazp"] )
         force2.append( model[i]["force"] )
     elif model[i]["psi"]/np.pi*180.0 < 90 :
-        displacement3.append( model[i]["deltaz"] )
+        displacement3.append( model[i]["deltazp"] )
         force3.append( model[i]["force"] )
 
 
+fig = plt.figure(figsize=(10, 4.5))
+
+ax1 = fig.add_subplot(121, aspect = 'equal', adjustable = 'box', ylim = (2.0, 8.0), xlim = (0, model[i]["x"][-1]))
+
+# ax1.set_facecolor("#222")
+
+ct = len(model)
+
+for i in range(0, len(model), 50):
+    col = ((ct-i)/2/ct, (ct-i)/ct/2, (ct-i)/ct/2)
+    # col = (0.0, 0.0, 0.0)
+    print(col)
+    ax1.plot(model[i]["x"], model[i]["y"], color = col)
+
+    e1 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 0.0, theta2 = 180.0, \
+    fill = False, fc = "None", ec = col, lw = 1.0)
+    e2 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 180.0, theta2 = 360.0, \
+    fill = False, fc = "None", ec = col, lw = 1.0)
+
+    ax1.add_patch(e1)
+    ax1.add_patch(e2)
+
+
+ax1.set_xlabel(r"$r/R$", fontsize = 24)
+ax1.set_ylabel(r"$z/R$", fontsize = 24)
+
+ax1.tick_params('both', labelsize=16)
+
+ax1.annotate('(a)', xy=(0.8, 0.9), xycoords='axes fraction', fontsize=24)
+
+ax2 = fig.add_subplot(122, ylim = (-1, 1.25), xlim = (-2.2, 2.2))
+
+ax2.plot(displacement1, force1, '-', color = "g", fillstyle = "none", lw=2)
+ax2.plot(displacement2, force2, '-', color = "b", fillstyle = "none", lw=2)
+ax2.plot(displacement3, force3, '-', color = "r", fillstyle = "none", lw=2)
+
+ax2.tick_params('both', labelsize=16)
+ax2.set_xlabel(r"$\Delta z'/R$", fontsize = 24)
+ax2.set_ylabel(r"$\frac{F}{2 \pi \gamma R}$", fontsize = 24)
+
+ax2.annotate('(b)', xy=(0.8, 0.9), xycoords='axes fraction', fontsize=24)
+# if model[i]["regime"] == 1:
+#     ax2.text(-2, 0.5, 'sliding', fontsize = 36)
+# elif model[i]["regime"] == 2:
+#     ax2.text(-2, 0.5, 'pinned', fontsize = 36)
+
+
+
+plt.tight_layout()
+plt.savefig(ofile)
+plt.clf()
+plt.close()
