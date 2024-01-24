@@ -116,6 +116,10 @@ ax2.annotate('(b)', xy=(0.8, 0.9), xycoords='axes fraction', fontsize=24)
 #     ax2.text(-2, 0.5, 'pinned', fontsize = 36)
 
 
+ax2.annotate('Sliding', xy=(0.2, 0.09), xycoords='axes fraction', fontsize=16)
+ax2.annotate('Pinned',  xy=(0.52, 0.4), xycoords='axes fraction', fontsize=16)
+ax2.annotate('Sliding', xy=(0.75, 0.69), xycoords='axes fraction', fontsize=16)
+
 
 plt.tight_layout()
 plt.savefig(ofile)
