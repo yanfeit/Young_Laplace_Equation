@@ -71,22 +71,23 @@ for i in range(0, len(model), 2):
 
 fig = plt.figure(figsize=(10, 4.5))
 
-ax1 = fig.add_subplot(121, aspect = 'equal', adjustable = 'box', ylim = (2.0, 8.0), xlim = (0, model[i]["x"][-1]))
+ax1 = fig.add_subplot(121, aspect = 'equal', adjustable = 'box', ylim = (2.0, 7.5), xlim = (0, model[i]["x"][-1]))
 
 # ax1.set_facecolor("#222")
 
 ct = len(model)
 
-for i in range(0, len(model), 50):
-    col = ((ct-i)/2/ct, (ct-i)/ct/2, (ct-i)/ct/2)
-    # col = (0.0, 0.0, 0.0)
+step = 60
+for i in range(0, len(model), step):
+    col = ((ct-i)/1.25/ct, (ct-i)/ct/1.25, (ct-i)/ct/1.25)
+    # col = (0.0, 0.0, 0.0) # pure black
     print(col)
-    ax1.plot(model[i]["x"], model[i]["y"], color = col)
+    ax1.plot(model[i]["x"], model[i]["y"],color = col, lw=2.0, label = 'State {}'.format(int(i/step)))
 
     e1 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 0.0, theta2 = 180.0, \
-    fill = False, fc = "None", ec = col, lw = 1.0)
+    fill = False, fc = "None", ec = col, lw = 2.0)
     e2 = Wedge((0, model[i]["d"] + 1), 1, theta1 = 180.0, theta2 = 360.0, \
-    fill = False, fc = "None", ec = col, lw = 1.0)
+    fill = False, fc = "None", ec = col, lw = 2.0)
 
     ax1.add_patch(e1)
     ax1.add_patch(e2)
@@ -96,6 +97,8 @@ ax1.set_xlabel(r"$r/R$", fontsize = 24)
 ax1.set_ylabel(r"$z/R$", fontsize = 24)
 
 ax1.tick_params('both', labelsize=16)
+
+ax1.legend(loc='lower right', frameon=False)
 
 ax1.annotate('(a)', xy=(0.8, 0.9), xycoords='axes fraction', fontsize=24)
 
@@ -116,8 +119,8 @@ ax2.annotate('(b)', xy=(0.8, 0.9), xycoords='axes fraction', fontsize=24)
 #     ax2.text(-2, 0.5, 'pinned', fontsize = 36)
 
 
-ax2.annotate('Sliding', xy=(0.2, 0.09), xycoords='axes fraction', fontsize=16)
-ax2.annotate('Pinned',  xy=(0.52, 0.4), xycoords='axes fraction', fontsize=16)
+ax2.annotate('Sliding', xy=(0.2, 0.09),  xycoords='axes fraction', fontsize=16)
+ax2.annotate('Pinned',  xy=(0.52, 0.4),  xycoords='axes fraction', fontsize=16)
 ax2.annotate('Sliding', xy=(0.75, 0.69), xycoords='axes fraction', fontsize=16)
 
 
