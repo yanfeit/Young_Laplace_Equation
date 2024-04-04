@@ -78,7 +78,8 @@ ax1 = fig.add_subplot(121, aspect = 'equal', adjustable = 'box', ylim = (2.0, 7.
 ct = len(model)
 
 step = 60
-for i in range(0, len(model), step):
+ilist = list(range(0, len(model), step))
+for i in ilist:
     col = ((ct-i)/1.25/ct, (ct-i)/ct/1.25, (ct-i)/ct/1.25)
     # col = (0.0, 0.0, 0.0) # pure black
     print(col)
@@ -107,6 +108,12 @@ ax2 = fig.add_subplot(122, ylim = (-1, 1.25), xlim = (-2.2, 2.2))
 ax2.plot(displacement1, force1, '-', color = "g", fillstyle = "none", lw=2)
 ax2.plot(displacement2, force2, '-', color = "b", fillstyle = "none", lw=2)
 ax2.plot(displacement3, force3, '-', color = "r", fillstyle = "none", lw=2)
+
+for i in ilist:
+    col = ((ct-i)/1.25/ct, (ct-i)/ct/1.25, (ct-i)/ct/1.25)
+    
+    ax2.scatter(model[i]["deltazp"], model[i]["force"],s = 20,  marker = 'o', linewidths = 1.0, facecolors='none', 
+    edgecolors=col)
 
 ax2.tick_params('both', labelsize=16)
 ax2.set_xlabel(r"$\Delta z'/R$", fontsize = 24)
